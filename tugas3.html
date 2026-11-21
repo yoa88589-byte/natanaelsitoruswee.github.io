@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas 3 | Sajian Data & Dashboard - Natanael Sitorus</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #fff;
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #555;
+            margin-left: 20px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: #1abc9c;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .action-box {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .action-box h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background-color: #1abc9c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+            display: inline-block;
+            margin: 8px;
+        }
+
+        .btn:hover {
+            background-color: #16a085;
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background-color: #34495e;
+        }
+
+        .btn-secondary:hover {
+            background-color: #2c3e50;
+        }
+
+        .dashboard-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+
+        .dashboard-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f2f6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .iframe-wrapper {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 60%;
+            overflow: hidden;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .iframe-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            background: #2c3e50;
+            color: white;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px 5%;
+            }
+            nav a {
+                margin: 0 8px;
+                font-size: 0.9rem;
+            }
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .iframe-wrapper {
+                padding-bottom: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">Natanael Sitorus</div>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="biodata.html">Biodata</a>
+            <a href="tugas1.html">Tugas 1</a>
+            <a href="tugas2.html">Tugas 2</a>
+            <a href="tugas3.html" class="active">Tugas 3</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Dokumentasi Tugas 3</h1>
+            <p>Sistem Informasi Manajemen Perikanan — Pengumpulan & Visualisasi Data</p>
+        </div>
+
+        <div class="action-box">
+            <h3>Tautan Navigasi Tugas 3</h3>
+            <p style="color: #7f8c8d; margin-bottom: 15px;">Anda dapat membuka laporan secara penuh di tab baru atau kembali ke halaman utama.</p>
+            <a href="https://lookerstudio.google.com/reporting/f94b11ba-f465-46ab-ad37-6a54738d27f9/page/TI5DG" target="_blank" class="btn btn-secondary">Buka Dashboard Fullscreen</a>
+            <a href="index.html" class="btn btn-secondary" style="background-color: #7f8c8d;">Kembali ke Home</a>
+        </div>
+
+        <div class="dashboard-container">
+            <div class="dashboard-title">
+                <span>📊 Visualisasi Interaktif Looker Studio</span>
+            </div>
+            
+            <div class="iframe-wrapper">
+                <iframe 
+                    src="https://lookerstudio.google.com/embed/reporting/f94b11ba-f465-46ab-ad37-6a54738d27f9/page/TI5DG" 
+                    frameborder="0" 
+                    style="border:0" 
+                    allowfullscreen 
+                    sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Natanael Sitorus. Tugas Sistem Informasi Manajemen Perikanan.</p>
+    </footer>
+</body>
+</html>
