@@ -5,19 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home | Natanael Sitorus</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Poppins', 'Segoe UI', sans-serif;
             background-color: #f8f9fa;
             color: #333;
             line-height: 1.6;
         }
-
         header {
             background-color: #fff;
             padding: 18px 8%;
@@ -29,25 +23,9 @@
             top: 0;
             z-index: 1000;
         }
-
-        .logo {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #555;
-            margin-left: 20px;
-            font-weight: 500;
-            transition: 0.3s;
-        }
-
-        nav a:hover, nav a.active {
-            color: #1abc9c;
-        }
-
+        .logo { font-size: 1.3rem; font-weight: bold; color: #2c3e50; }
+        nav a { text-decoration: none; color: #555; margin-left: 20px; font-weight: 500; transition: 0.3s; }
+        nav a:hover, nav a.active { color: #1abc9c; }
         .hero {
             min-height: 85vh;
             display: flex;
@@ -61,30 +39,10 @@
             color: white;
             padding: 40px 20px;
         }
-
-        .hero-content {
-            max-width: 850px;
-        }
-
-        .hero-content h1 {
-            font-size: 3.2rem;
-            margin-bottom: 12px;
-            letter-spacing: 1px;
-        }
-
-        .hero-content p {
-            font-size: 1.15rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-
-        .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
-
+        .hero-content { max-width: 850px; }
+        .hero-content h1 { font-size: 3.2rem; margin-bottom: 12px; letter-spacing: 1px; }
+        .hero-content p { font-size: 1.15rem; margin-bottom: 30px; opacity: 0.9; }
+        .button-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
         .btn {
             padding: 12px 28px;
             background-color: #1abc9c;
@@ -95,41 +53,14 @@
             transition: 0.3s;
             display: inline-block;
         }
-
-        .btn:hover {
-            background-color: #16a085;
-            transform: scale(1.05);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid #1abc9c;
-        }
-
-        .btn-outline:hover {
-            background-color: #1abc9c;
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px 20px;
-            background: #2c3e50;
-            color: white;
-        }
-
+        .btn:hover { background-color: #16a085; transform: scale(1.05); }
+        .btn-outline { background-color: transparent; border: 2px solid #1abc9c; }
+        .btn-outline:hover { background-color: #1abc9c; }
+        footer { text-align: center; padding: 30px 20px; background: #2c3e50; color: white; }
         @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                gap: 10px;
-                padding: 15px 5%;
-            }
-            nav a {
-                margin: 0 8px;
-                font-size: 0.9rem;
-            }
-            .hero-content h1 {
-                font-size: 2.2rem;
-            }
+            header { flex-direction: column; gap: 10px; padding: 15px 5%; }
+            nav a { margin: 0 8px; font-size: 0.9rem; }
+            .hero-content h1 { font-size: 2.2rem; }
         }
     </style>
 </head>
@@ -140,8 +71,8 @@
         <nav>
             <a href="index.html" class="active">Home</a>
             <a href="biodata.html">Biodata</a>
-            <a href="tugas1/tugas1.html">Tugas 1</a>
-            <a href="tugas2/tugas2.html">Tugas 2</a>
+            <a href="tugas1.html">Tugas 1</a>
+            <a href="tugas2.html">Tugas 2</a>
         </nav>
     </header>
 
@@ -152,8 +83,8 @@
 
             <div class="button-group">
                 <a href="biodata.html" class="btn btn-outline">Biodata, Foto & Video</a>
-                <a href="tugas1/tugas1.html" class="btn">Tugas 1 (Google Form)</a>
-                <a href="tugas2/tugas2.html" class="btn">Tugas 2 (Looker Studio)</a>
+                <a href="tugas1.html" class="btn">Tugas 1 (Google Form)</a>
+                <a href="tugas2.html" class="btn">Tugas 2 (Looker Studio)</a>
             </div>
         </div>
     </section>
