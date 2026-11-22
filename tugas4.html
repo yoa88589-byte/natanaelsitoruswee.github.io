@@ -227,54 +227,20 @@ const CONFIG = {
       judul: "3. Notulen Rapat Kelompok",
       desc: "Dokumentasi jalannya rapat atau pertemuan kelompok termasuk pokok materi, usulan anggota, kesimpulan, dan rencana tindak lanjut.",
       aksi: [
-        {
-          label: "Buka Google Form Notulen",
-          url: "https://docs.google.com/forms/d/e/1FAIpQLSf6MF9IZ3aI8pCJUvdXxrJA9ciHd7LOKm9M9Lt9C5Q2NPzkcQ/viewform?usp=dialog",
-          utama: true
-        },
-        {
-          label: "Lihat Google Sheet Notulen",
-          url: "" // Tempel link Google Sheet Notulen Rapat di sini nanti
-        }
+        { label: "Buka Google Form Notulen", url: "", utama: true },
+        { label: "Lihat Google Sheet Notulen", url: "" }
       ],
-      formEmbed: "https://docs.google.com/forms/d/e/1FAIpQLSf6MF9IZ3aI8pCJUvdXxrJA9ciHd7LOKm9M9Lt9C5Q2NPzkcQ/viewform?embedded=true",
-      sheetEmbed: "", // Tempel URL embed Google Spreadsheet Notulen Rapat (pubhtml) di sini nanti
-      rekapData: {
-        kolom: ["No", "Timestamp", "Token & Nama KUB", "Tanggal Rapat", "Nama Kegiatan", "Pembicara", "Jabatan", "Pokok-Pokok Materi / Usulan", "Kesimpulan / Tindak Lanjut"],
-        baris: [
-          [
-            "1",
-            "11/22/2026 22:07:56",
-            "KUB-14Adr / KUB INTIMUNG TAKA",
-            "11/15/2026",
-            "Rapat Persiapan Penilaian Kelas KUB",
-            "Adria Saputra",
-            "Ketua Kelompok",
-            "Kelengkapan buku administrasi (tamu, surat, notulen) dan pembaharuan AD/ART",
-            "Semua anggota wajib melengkapi data administrasi sebelum kunjungan penyuluh"
-          ],
-          [
-            "2",
-            "11/22/2026 22:10:34",
-            "KUB-13Jun / KUB USAHA MAKMUR",
-            "11/8/2026",
-            "Rapat Rutin Bulanan KUB",
-            "Junaidi",
-            "Ketua Kelompok",
-            "Evaluasi hasil tangkapan ikan selar dan perbaikan jaring biasa milik anggota",
-            "Disepakati iuran perbaikan jaring dan pencatatan harian hasil tangkapan oleh Nanang"
-          ]
-        ]
-      },
+      formEmbed: "",  // Tempel URL embed Google Form Notulen Rapat
+      sheetEmbed: "", // Tempel URL embed Google Spreadsheet Notulen Rapat (pubhtml)
       kolomStandar: [
-        "Timestamp",
-        "Token & Nama KUB",
-        "Tanggal Rapat",
-        "Nama Kegiatan",
-        "Pembicara",
-        "Jabatan",
-        "Pokok-Pokok Materi / Usulan",
-        "Kesimpulan / Tindak Lanjut"
+        "Token Kelompok (Relasi Data Dasar)",
+        "Nama KUB",
+        "Tanggal Rapat / Pertemuan",
+        "Nama Kegiatan (Rapat/Pertemuan)",
+        "Nama Pembicara / Pemberi Pendapat",
+        "Jabatan dalam Kelompok",
+        "Pokok Materi / Usulan / Pendapat",
+        "Kesimpulan & Rencana Tindak Lanjut"
       ]
     }
   ]
