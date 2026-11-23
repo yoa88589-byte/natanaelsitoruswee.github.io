@@ -12,7 +12,7 @@
   <style>
     :root {
       --background:#f7fafb; --foreground:#090a0b; --foreground-muted:rgb(9 10 11/.35);
-      --surface-dark:#0e0f14; --surface-black:#090a0b; --surface-soft:#dfe5e9;
+      --surface-dark:#0e0f14; --surface-black:#090a0b; --surface-soft:#cfd7de;
       --foreground-on-dark:#fff; --foreground-on-dark-muted:#b6c1c8; --foreground-on-dark-faint:rgb(255 255 255/.4);
       --border-muted:#dfe5e9; --map-dot:#7a7a7a; --map-grid:#4d4d4d; --map-grid-ghost:#1e1e1e; --map-mark:#f7fafb;
       --timeline-outline:#535450; --timeline-fill:rgb(255 255 255/.1); --timeline-rail:rgb(255 255 255/.2);
@@ -96,9 +96,8 @@
     @media(min-width:768px)and(max-width:1279px){.hero-middle{flex-direction:row;justify-content:space-between}}
     @media(min-width:1280px){.hero-middle{flex-direction:row;align-items:center;justify-content:space-between;margin-top:0}}
     .hero-identity{position:relative;display:flex;flex-direction:column;max-width:28rem;gap:2rem}
-    @media(min-width:1280px){.hero-identity{gap:5.5rem}}
-    .hero-id{font-size:var(--type-label);text-transform:uppercase;color:var(--foreground-muted);line-height:.9;margin-bottom:1rem}
-    @media(min-width:1280px){.hero-id{position:absolute;left:20.5rem;top:.5625rem;margin-bottom:0;white-space:nowrap}}
+    @media(min-width:1280px){.hero-identity{gap:5rem}}
+    .hero-id{font-size:var(--type-label);text-transform:uppercase;color:var(--foreground-muted);line-height:.9;margin-bottom:.75rem;letter-spacing:.04em}
     .hero-name{font-family:var(--font-display);font-weight:700;text-transform:uppercase;line-height:.95;font-size:var(--type-display-lg);max-width:6.5em}
     @media(min-width:768px){.hero-name{font-size:var(--type-impact)}} @media(min-width:1024px)and(max-width:1279px){.hero-name{font-size:var(--type-display-lg)}} @media(min-width:1280px){.hero-name{font-size:var(--type-impact)}}
     .hero-meta-list{display:flex;flex-direction:column;gap:1rem}
@@ -260,7 +259,7 @@
         <section id="biodata" data-hero>
           <div class="hero-canvas-wrap">
             <canvas id="hero-contour-fb" class="contour-canvas" data-contour-color="--surface-soft" aria-hidden="true"></canvas>
-            <div class="hero-fallback" id="heroFallback"><img id="heroFallbackImg" src="person-fallback.webp" alt="Foto Profil Natanael Sitorus" /></div>
+            <div class="hero-fallback" id="heroFallback"><img id="heroFallbackImg" alt="Foto Profil Natanael Sitorus" /></div>
             <canvas id="hero-gl" aria-hidden="true"></canvas>
           </div>
           <div class="hero-fit-area"><div class="hero-fit-box" id="heroFitBox"></div></div>
@@ -506,28 +505,45 @@
     const applyStack=()=>{stackRaf=0;const view=innerHeight||1,shrink=phoneQuery.matches?0:.1;for(const{inner,shade,next}of pinned){const p=Math.min(1,Math.max(0,1-next.getBoundingClientRect().top/view));inner.style.transform=p>0&&shrink>0?`scale(${1-shrink*p})`:"";shade.style.opacity=`${.55*p}`;inner.style.visibility=p>=1?"hidden":"visible";}};
     addEventListener("scroll",()=>{if(!stackRaf)stackRaf=requestAnimationFrame(applyStack);},{passive:true}); addEventListener("resize",applyStack);
 
-    /* HERO WEBGL (Multi-sumber + Auto-Align Kepala + Fallback Aman file://) */
+    /* HERO WEBGL */
     async function initHeroWebGL(){
       const canvas=document.getElementById("hero-gl"), heroEl=document.querySelector("[data-hero]"), fallbackEl=document.getElementById("heroFallback"), fallbackImg=document.getElementById("heroFallbackImg"), fbContour=document.getElementById("hero-contour-fb");
       const SAMPLES=innerWidth<768?28:innerWidth<1280?44:72, REF="https://storage.getlayers.ai/assets/kimi-04a9449ab2/hero/scene";
       let renderer;
+
+      const deriveFromImg=(im)=>{
+        const w=256,h=256,c=document.createElement("canvas");c.width=w;c.height=h;const cx=c.getContext("2d");cx.drawImage(im,0,0,w,h);
+        const s=cx.getImageData(0,0,w,h).data, dA=new Float32Array(w*h),dB=new Uint8Array(w*h*4),nB=new Uint8Array(w*h*4),aB=new Uint8Array(w*h*4);
+        for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=(y*w+x)*4,l=(s[i]*.3+s[i+1]*.59+s[i+2]*.11)/255,d=Math.min(1,l*.45+Math.max(0,1-Math.hypot((x/w-.5)*2,(y/h-.38)*2)*.65)*.55);dA[y*w+x]=d;dB[i]=dB[i+1]=dB[i+2]=Math.round(d*255);dB[i+3]=255;}
+        for(let y=0;y<h;y++)for(let x=0;x<w;x++){const gx=(dA[y*w+Math.min(w-1,x+1)]-dA[y*w+Math.max(0,x-1)])*3,gy=(dA[Math.min(h-1,y+1)*w+x]-dA[Math.max(0,y-1)*w+x])*3,ln=Math.hypot(-gx,-gy,1),i=(y*w+x)*4;nB[i]=Math.round(((-gx/ln)*.5+.5)*255);nB[i+1]=Math.round(((-gy/ln)*.5+.5)*255);nB[i+2]=Math.round(((1/ln)*.5+.5)*255);nB[i+3]=255;aB[i]=aB[i+1]=aB[i+2]=255;aB[i+3]=255;}
+        const mk=b=>{const t=new THREE.DataTexture(b,w,h,THREE.RGBAFormat);t.flipY=true;t.needsUpdate=true;return t;};
+        const df=new THREE.Texture(im);df.colorSpace=THREE.SRGBColorSpace;df.needsUpdate=true;
+        return {diffuse:df,depth:mk(dB),alpha:mk(aB),normal:mk(nB)};
+      };
+
+      const showDiagnostic=()=>{
+        const box=document.createElement("div");
+        box.style.cssText="position:fixed;bottom:14px;left:14px;z-index:999;background:#090a0b;color:#fff;border:1px solid #02d2e3;padding:10px 12px;font:12px/1.4 monospace;border-radius:6px;max-width:340px";
+        box.innerHTML=`<div style="color:#02d2e3;font-weight:700;margin-bottom:4px">FOTO BELUM DITEMUKAN DI REPO</div><div style="margin-bottom:8px;color:#b6c1c8">Pastikan file <b>person-diffuse.webp</b> (atau <b>pp.jpg</b>) sudah di-upload ke GitHub di folder yang sama dengan biodata.html.</div><label style="display:inline-block;background:#02d2e3;color:#090a0b;padding:5px 10px;font-weight:700;cursor:pointer;border-radius:4px">Tes Pilih Foto / JSON<input type="file" accept=".json,image/*" hidden></label>`;
+        box.querySelector("input").onchange=async e=>{
+          const f=e.target.files[0]; if(!f)return;
+          if(f.name.endsWith(".json")){const j=JSON.parse(await f.text()); fallbackImg.src=j.fallback_rgba||j.diffuse;}
+          else fallbackImg.src=URL.createObjectURL(f);
+          fallbackEl.style.display="flex"; fallbackEl.classList.add("active"); box.remove();
+        };
+        document.body.appendChild(box);
+      };
+
       const activateFallbackImg=()=>{
         fbContour.style.display="block";
         fallbackEl.classList.add("active");
-        const candidates=["person-fallback.webp","person-diffuse.webp","pp.jpg"]; let idx=0;
-        fallbackImg.onerror=()=>{ idx++; if(idx<candidates.length) fallbackImg.src=candidates[idx]; else { fallbackEl.style.display="none"; showManualLoad(); } };
-        fallbackImg.src=candidates[0];
-      };
-      const showManualLoad=()=>{
-        const box=document.createElement("div");
-        box.style.cssText="position:fixed;bottom:14px;left:14px;z-index:999;background:#090a0b;color:#fff;border:1px solid #02d2e3;padding:8px 12px;font:12px monospace;border-radius:6px;display:flex;gap:8px;align-items:center";
-        box.innerHTML=`<span>Foto belum ketemu</span><label style="background:#02d2e3;color:#090a0b;padding:4px 8px;font-weight:700;cursor:pointer;border-radius:4px">Pilih JSON/Foto<input type="file" accept=".json,image/*" hidden></label>`;
-        box.querySelector("input").onchange=async e=>{
-          const f=e.target.files[0]; if(!f)return;
-          if(f.name.endsWith(".json")){const j=JSON.parse(await f.text()); fallbackImg.src=j.fallback_rgba||j.diffuse; fallbackEl.style.display="flex"; fallbackEl.classList.add("active"); box.remove();}
-          else{fallbackImg.src=URL.createObjectURL(f); fallbackEl.style.display="flex"; fallbackEl.classList.add("active"); box.remove();}
+        const cands=["person-fallback.webp","person-diffuse.webp","pp.jpg","PP.jpg","pp.jpeg","pp.png"]; let idx=0;
+        const tryNext=()=>{
+          if(idx>=cands.length){ fallbackEl.style.display="none"; showDiagnostic(); return; }
+          fallbackImg.src=cands[idx++];
         };
-        document.body.appendChild(box);
+        fallbackImg.onerror=tryNext;
+        tryNext();
       };
 
       try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:innerWidth>=1280,stencil:false});}
@@ -579,44 +595,50 @@
         fragmentShader:`varying vec4 vC;uniform vec3 uBg,uLn,uRv,uRvA;uniform float uLS,uLC,uLT,uLO,uWA,uWS,uRO;${REVEAL_GLSL}
           float f(vec2 p,float t){return(sin(p.x+t*.6)*.5+sin(p.y*.85-t*.45)*.45+sin((p.x+p.y)*.65+t*.35)*.35+sin((p.x-p.y)*.95-t*.55)*.25)*.5+.5;}
           void main(){vec2 ndc=vC.xy/vC.w,p=vec2(ndc.x*uAspect,ndc.y)*uLS;float t=uTime*uWS;vec2 q=p+vec2(sin(p.y*.8+t*.7),cos(p.x*.7-t*.6))*uWA;float sc=f(q,t)*uLC,w=max(fwidth(sc)*uLT,1e-5);vec3 col=mix(uBg,uLn,(1.-smoothstep(0.,w,abs(fract(sc)-.5)))*uLO*uRevealMix);if(uRO>.001)col=mix(col,mix(uRv,uRvA,mod(floor(sc+.5),2.)),revealTrail(ndc)*uRevealMix*uRO);gl_FragColor=vec4(col,1.);#include <colorspace_fragment>}`,
-        uniforms:{...u,uBg:{value:new THREE.Color(readToken("--background"))},uLn:{value:new THREE.Color(readToken("--surface-soft"))},uRv:{value:new THREE.Color().setScalar(.62)},uRvA:{value:new THREE.Color().setScalar(.44)},uLS:{value:3.8},uLC:{value:2.5},uLT:{value:1.4},uLO:{value:.85},uWA:{value:.37},uWS:{value:1.66},uRO:{value:coarsePointer?0:1}}
+        uniforms:{...u,uBg:{value:new THREE.Color(readToken("--background"))},uLn:{value:new THREE.Color(readToken("--surface-soft"))},uRv:{value:new THREE.Color().setScalar(.62)},uRvA:{value:new THREE.Color().setScalar(.44)},uLS:{value:3.8},uLC:{value:2.5},uLT:{value:1.6},uLO:{value:.95},uWA:{value:.37},uWS:{value:1.66},uRO:{value:coarsePointer?0:1}}
       });
       const bgMesh=new THREE.Mesh(new THREE.PlaneGeometry(1,1),bgMat); bgMesh.position.z=-3; bgMesh.renderOrder=-1; scene.add(bgMesh);
 
       const HEAD_H=5.4, HEAD_EXT=.14, HEAD_SC=.8, HEAD_Y=.58;
       let headMat=null, outlineMat=null, hasHelmet=false, useFallback=false;
 
-      // Muat foto wajah: 4 WebP -> JSON -> pp.jpg -> Fallback IMG
       async function loadPortraitMaps(){
+        // 1. Coba muat person-diffuse.webp secara independen agar kalau depth/normal belum ada tetap jalan
         try{
-          const[diffuse,depth,alpha,normal]=await Promise.all([loadTex("person-diffuse.webp",true),loadTex("person-depth.webp"),loadTex("person-alpha.webp"),loadTex("person-normal.webp")]);
+          const diffuse=await loadTex("person-diffuse.webp",true);
+          const derived=deriveFromImg(diffuse.image);
+          const [depth,alpha,normal]=await Promise.all([
+            loadTex("person-depth.webp").catch(()=>derived.depth),
+            loadTex("person-alpha.webp").catch(()=>derived.alpha),
+            loadTex("person-normal.webp").catch(()=>derived.normal),
+          ]);
           return {diffuse,depth,alpha,normal};
         }catch{}
+        // 2. Coba file JSON
         for(const jUrl of ["./person-maps.json","./Generated File November 23, 2026 - 9_38AM.json"]){
           try{
             const r=await fetch(jUrl); if(!r.ok)continue; const j=await r.json();
-            if(j.diffuse&&j.depth&&j.alpha&&j.normal){
-              const [d,dp,a,n]=await Promise.all([loadImg(j.diffuse),loadImg(j.depth),loadImg(j.alpha),loadImg(j.normal)]);
+            if(j.diffuse){
+              const d=await loadImg(j.diffuse), der=deriveFromImg(d);
+              const [dp,a,n]=await Promise.all([
+                j.depth?loadImg(j.depth).catch(()=>null):null,
+                j.alpha?loadImg(j.alpha).catch(()=>null):null,
+                j.normal?loadImg(j.normal).catch(()=>null):null,
+              ]);
               const tx=(im,sr)=>{const t=new THREE.Texture(im);if(sr)t.colorSpace=THREE.SRGBColorSpace;t.needsUpdate=true;return t;};
-              return {diffuse:tx(d,true),depth:tx(dp),alpha:tx(a),normal:tx(n)};
+              return {diffuse:tx(d,true),depth:dp?tx(dp):der.depth,alpha:a?tx(a):der.alpha,normal:n?tx(n):der.normal};
             }
           }catch{}
         }
-        try{
-          const im=await loadImg("pp.jpg");
-          const w=256,h=256,c=document.createElement("canvas");c.width=w;c.height=h;const cx=c.getContext("2d");cx.drawImage(im,0,0,w,h);
-          const s=cx.getImageData(0,0,w,h).data, dA=new Float32Array(w*h),dB=new Uint8Array(w*h*4),nB=new Uint8Array(w*h*4),aB=new Uint8Array(w*h*4);
-          for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=(y*w+x)*4,l=(s[i]*.3+s[i+1]*.59+s[i+2]*.11)/255,d=Math.min(1,l*.45+Math.max(0,1-Math.hypot((x/w-.5)*2,(y/h-.38)*2)*.65)*.55);dA[y*w+x]=d;dB[i]=dB[i+1]=dB[i+2]=Math.round(d*255);dB[i+3]=255;}
-          for(let y=0;y<h;y++)for(let x=0;x<w;x++){const gx=(dA[y*w+Math.min(w-1,x+1)]-dA[y*w+Math.max(0,x-1)])*3,gy=(dA[Math.min(h-1,y+1)*w+x]-dA[Math.max(0,y-1)*w+x])*3,ln=Math.hypot(-gx,-gy,1),i=(y*w+x)*4;nB[i]=Math.round(((-gx/ln)*.5+.5)*255);nB[i+1]=Math.round(((-gy/ln)*.5+.5)*255);nB[i+2]=Math.round(((1/ln)*.5+.5)*255);nB[i+3]=255;aB[i]=aB[i+1]=aB[i+2]=255;aB[i+3]=255;}
-          const mk=b=>{const t=new THREE.DataTexture(b,w,h,THREE.RGBAFormat);t.flipY=true;t.needsUpdate=true;return t;};
-          const df=new THREE.Texture(im);df.colorSpace=THREE.SRGBColorSpace;df.needsUpdate=true;
-          return {diffuse:df,depth:mk(dB),alpha:mk(aB),normal:mk(nB)};
-        }catch{return null;}
+        // 3. Coba pp.jpg / person-fallback.webp
+        for(const fUrl of ["person-fallback.webp","pp.jpg","PP.jpg","pp.jpeg","pp.png"]){
+          try{ return deriveFromImg(await loadImg(fUrl)); }catch{}
+        }
+        return null;
       }
 
       const maps=await loadPortraitMaps();
       if(maps){
-        // Auto-Align Kepala dari person-alpha.webp + cek apakah alpha valid
         let solidAlpha=1;
         if(HELMET_CALIBRATION.auto && maps.alpha.image){
           try{
@@ -624,7 +646,7 @@
             const px=cx.getImageData(0,0,S,S).data;
             let topY=-1,botY=S-1,rows=[],sumR=0;
             for(let y=0;y<S;y++){let mn=S,mx=-1,cnt=0;for(let x=0;x<S;x++){const rv=px[(y*S+x)*4];sumR+=rv;if(rv>128){if(x<mn)mn=x;if(x>mx)mx=x;cnt++;}}rows.push({mn,mx,w:mx>=mn?mx-mn+1:0});if(topY===-1&&cnt>=3)topY=y;if(cnt>=3)botY=y;}
-            if(sumR/(S*S)<2) solidAlpha=0; // alpha kosong -> paksa tampilkan penuh
+            if(sumR/(S*S)<2) solidAlpha=0;
             else if(topY!==-1){
               const sp=Math.max(20,botY-topY),y0=Math.min(S-1,topY+Math.round(sp*.08)),y1=Math.min(S-1,topY+Math.round(sp*.24));
               let sumCx=0,maxW=0,n=0;
@@ -653,7 +675,7 @@
         hm.scale.setScalar(HEAD_SC); hm.position.set(0,-.55+HEAD_Y-(HEAD_H*HEAD_EXT*HEAD_SC)/2,0); subjectGroup.add(hm);
       }else{
         useFallback=true;
-        bgMesh.visible=false; // biarkan contour 2D + foto fallback di belakang canvas WebGL yang transparan
+        bgMesh.visible=false;
         renderer.setClearColor(0x000000,0);
         activateFallbackImg();
       }
@@ -698,7 +720,6 @@
       resize(); new ResizeObserver(resize).observe(heroEl);
       await renderer.compileAsync(scene,camera);
 
-      // Kalibrasi Live (Tekan tombol K)
       let forceHelmet=false;
       const calBox=document.createElement("div");
       calBox.style.cssText="display:none;position:fixed;bottom:16px;right:16px;z-index:999;background:#090a0b;color:#fff;border:1px solid #02d2e3;padding:12px 14px;font:12px/1.4 monospace;width:240px;border-radius:6px;";
